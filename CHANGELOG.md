@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/oblakstudio/composer-autoconstructor-plugin/compare/v1.0.0...v1.0.1) (2023-07-27)
+
+
+### Bug Fixes
+
+* Fixed gitattributes ([6cb9e39](https://github.com/oblakstudio/composer-autoconstructor-plugin/commit/6cb9e399438fd17ffd7ca58dfc5435635b6df39a))
+
 # 1.0.0 (2023-07-27)
 
 

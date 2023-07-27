@@ -2,7 +2,7 @@
   "name": "oblak/composer-autoconstructor-plugin",
   "description": "Automatically constructs classes from base namespace",
   "type": "composer-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "GPL-2.0-only",
   "authors": [
     {
