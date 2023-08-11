@@ -146,7 +146,7 @@ class AutoConstructorPlugin implements PluginInterface, EventSubscriberInterface
     /**
      * Returns the exclude file path.
      *
-     * @return string
+     * @return array
      */
     private function getExcludes(): array
     {
@@ -158,14 +158,14 @@ class AutoConstructorPlugin implements PluginInterface, EventSubscriberInterface
         }
 
         if (isset($extra[self::KEY_EXCLUDE_FILE])) {
-            $excludes_file = $this->cwd . '/config/excludes.php';
+            $excludes_file = $this->cwd . $extra[self::KEY_EXCLUDE_FILE];
         }
 
         if (file_exists($excludes_file)) {
             return include $excludes_file;
         }
 
-        throw new \InvalidArgumentException('No exclude file or exclude classes found');
+        return [];
     }
 
     /**
@@ -232,6 +232,7 @@ class AutoConstructorPlugin implements PluginInterface, EventSubscriberInterface
     private function createModuleFile($classnames)
     {
         $baseNamespace = $this->getBaseNamespace();
+        $io            = $this->io;
 
         $output = sprintf(
             "<?php\n/**\n * %s Modules\n *\n * @package    %s\n * @subpackage Config\n */\n\nreturn array(",
@@ -260,14 +261,23 @@ class AutoConstructorPlugin implements PluginInterface, EventSubscriberInterface
             );
         }
 
-        $output .= "\n);\n\n";
+        $output .= "\n);\n";
 
-        return $this->writeFile($output);
+        $bytes = $this->writeFile($output);
+
+        if (0 === $bytes) {
+            $io->write('<error>Module file could not be created</error>');
+            return 1;
+        }
+
+        $io->write(sprintf('<info>Module file created successfully with %d classes</info>', count($classnames)));
+
+        return 0;
     }
 
     private function writeFile(string $output): int
     {
-        return file_put_contents($this->getModuleFile(), $output) > 0 ? 0 : 1;
+        return file_put_contents($this->getModuleFile(), $output);
     }
 
     private function getClassnameKey(string $classname): string
